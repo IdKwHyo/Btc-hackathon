@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitTasker - Bitcoin-Powered AI Productivity Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f7931a;
+            --primary-dark: #e67e09;
+            --secondary: #4a6cf7;
+            --dark: #0f172a;
+            --darker: #060d1b;
+            --darkest: #030712;
+            --light: #e2e8f0;
+            --lighter: #f1f5f9;
+            --gray: #94a3b8;
+            --accent: #10b981;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: var(--darkest);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        header {
+            background-color: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--light);
+        }
+        
+        .logo span {
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .cta-button {
+            background-color: var(--primary);
+            color: var(--darkest);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 147, 26, 0.4);
+        }
+        
+        /* Enhanced Parallax Effects */
+        .parallax-wrapper {
+            height: 100vh;
+            overflow-x: hidden;
+            perspective: 10px;
+            perspective-origin: 50% 50%;
+            position: relative;
+        }
+        
+        .parallax-group {
+            position: relative;
+            height: 100vh;
+            transform-style: preserve-3d;
+            z-index: 1;
+        }
+        
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .starry-bg {
+            transform: translateZ(-15px) scale(2.5);
+            background: linear-gradient(180deg, #030712 0%, #1a1035 100%);
+            height: 120vh;
+        }
+        
+        .stars {
+            transform: translateZ(-12px) scale(2.2);
+            background-image: radial-gradient(white 1px, transparent 1px);
+            background-size: 50px 50px;
+            height: 120vh;
+            opacity: 0.5;
+        }
+        
+        .mountains-far {
+            transform: translateZ(-10px) scale(2);
+            bottom: -50px;
+            height: 40vh;
+            background: #261444;
+            -webkit-clip-path: polygon(0% 100%, 5% 85%, 10% 95%, 15% 80%, 20% 90%, 25% 70%, 30% 85%, 35% 65%, 40% 75%, 45% 60%, 50% 75%, 55% 55%, 60% 70%, 65% 50%, 70% 65%, 75% 45%, 80% 70%, 85% 55%, 90% 65%, 95% 50%, 100% 100%);
+            clip-path: polygon(0% 100%, 5% 85%, 10% 95%, 15% 80%, 20% 90%, 25% 70%, 30% 85%, 35% 65%, 40% 75%, 45% 60%, 50% 75%, 55% 55%, 60% 70%, 65% 50%, 70% 65%, 75% 45%, 80% 70%, 85% 55%, 90% 65%, 95% 50%, 100% 100%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .mountains-mid {
+            transform: translateZ(-6px) scale(1.6);
+            bottom: -50px;
+            height: 45vh;
+            background: #3d1d69;
+            -webkit-clip-path: polygon(0% 100%, 7% 80%, 12% 90%, 18% 75%, 24% 85%, 30% 65%, 36% 80%, 42% 60%, 48% 70%, 54% 55%, 60% 70%, 66% 50%, 72% 65%, 78% 45%, 84% 60%, 90% 50%, 96% 65%, 100% 100%);
+            clip-path: polygon(0% 100%, 7% 80%, 12% 90%, 18% 75%, 24% 85%, 30% 65%, 36% 80%, 42% 60%, 48% 70%, 54% 55%, 60% 70%, 66% 50%, 72% 65%, 78% 45%, 84% 60%, 90% 50%, 96% 65%, 100% 100%);
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        .mountains-near {
+            transform: translateZ(-3px) scale(1.3);
+            bottom: -50px;
+            height: 50vh;
+            background: #4e277e;
+            -webkit-clip-path: polygon(0% 100%, 8% 75%, 15% 85%, 22% 70%, 28% 80%, 35% 60%, 42% 75%, 50% 55%, 58% 65%, 65% 50%, 72% 60%, 80% 45%, 88% 55%, 95% 45%, 100% 100%);
+            clip-path: polygon(0% 100%, 8% 75%, 15% 85%, 22% 70%, 28% 80%, 35% 60%, 42% 75%, 50% 55%, 58% 65%, 65% 50%, 72% 60%, 80% 45%, 88% 55%, 95% 45%, 100% 100%);
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        .ground {
+            transform: translateZ(-1px) scale(1.1);
+            bottom: -5vh;
+            height: 30vh;
+            background: #2d0e51;
+            z-index: 5;
+        }
+        
+        .parallax-base {
+            transform: translateZ(0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            pointer-events: auto;
+        }
+        
+        .parallax-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(15, 23, 42, 0.2) 0%, rgba(3, 7, 18, 0.6) 100%);
+            z-index: 6;
+        }
+        
+        /* Floating Bitcoin elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 7;
+        }
+        
+        .floating-coin {
+            position: absolute;
+            opacity: 0.15;
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(247, 147, 26, 0.7);
+        }
+        
+        .coin1 {
+            top: 15%;
+            left: 10%;
+            font-size: 3rem;
+            animation: float 8s ease-in-out infinite, spin 20s linear infinite;
+        }
+        
+        .coin2 {
+            top: 60%;
+            right: 5%;
+            font-size: 4rem;
+            animation: float 12s ease-in-out infinite, spin 30s linear infinite;
+        }
+        
+        .coin3 {
+            bottom: 20%;
+            left: 20%;
+            font-size: 2.5rem;
+            animation: float 10s ease-in-out infinite, spin 25s linear infinite;
+        }
+
+        .coin4 {
+            top: 30%;
+            right: 20%;
+            font-size: 2rem;
+            animation: float 9s ease-in-out infinite, spin 22s linear infinite;
+        }
+        
+        .coin5 {
+            bottom: 40%;
+            left: 40%;
+            font-size: 3.5rem;
+            opacity: 0.1;
+            animation: float 14s ease-in-out infinite, spin 28s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        .hero {
+            padding: 7rem 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            z-index: 8;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(247, 147, 26, 0.1) 0%, rgba(3, 7, 18, 0) 70%);
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            text-shadow: 0 0 30px rgba(247, 147, 26, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-top: 4rem;
+        }
+        
+        .hero-image {
+            position: relative;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .features {
+            padding: 8rem 0;
+            background-color: var(--dark);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, var(--dark));
+            z-index: 1;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.75rem;
+            margin-bottom: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .feature-card {
+            background-color: rgba(15, 23, 42, 0.7);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(247, 147, 26, 0.2);
+            border-color: rgba(247, 147, 26, 0.3);
+        }
+        
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            background-color: rgba(247, 147, 26, 0.15);
+            color: var(--primary);
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(247, 147, 26, 0.3), transparent 30%);
+            animation: rotate 4s linear infinite;
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+        
+        /* How it Works Section */
+        .how-it-works {
+            padding: 8rem 0;
+            background-color: var(--darker);
+            position: relative;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+        
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            background-color: var(--primary);
+            color: var(--darkest);
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .step h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+        
+        .step p {
+            color: var(--gray);
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 8rem 0;
+            background-color: var(--darkest);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(247, 147, 26, 0.1) 0%, rgba(3, 7, 18, 0) 70%);
+            z-index: 1;
+        }
+        
+        .cta h2 {
+            font-size: 2.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        
+        .cta-secondary {
+            background-color: transparent;
+            color: var(--light);
+            border: 2px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cta-secondary:hover {
+            background-color: rgba(247, 147, 26, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 5rem 0 2rem;
+            background-color: var(--darker);
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -0.5rem;
+            width: 2rem;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .footer-column p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        /* Parallax Divider */
+        .parallax-divider {
+            position: relative;
+            height: 150px;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 10px;
+        }
+
+        .parallax-divider::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('/api/placeholder/1920/400');
+            background-size: cover;
+            background-position: center;
+            transform: translateZ(-3px) scale(1.3);
+            filter: brightness(0.2) hue-rotate(15deg);
+        }
+
+        .divider-mountains {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: #4e277e;
+            transform: translateZ(-1px) scale(1.1);
+            -webkit-clip-path: polygon(0% 100%, 8% 60%, 15% 75%, 22% 55%, 28% 70%, 35% 50%, 42% 65%, 50% 40%, 58% 60%, 65% 45%, 72% 65%, 80% 35%, 88% 50%, 95% 30%, 100% 100%);
+            clip-path: polygon(0% 100%, 8% 60%, 15% 75%, 22% 55%, 28% 70%, 35% 50%, 42% 65%, 50% 40%, 58% 60%, 65% 45%, 72% 65%, 80% 35%, 88% 50%, 95% 30%, 100% 100%);
+        }
+        
+        /* Scroll animations */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Enhanced parallax scrolling effect */
+        [data-parallax="scroll"] {
+            transition: transform 0.3s ease-out;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(3, 7, 18, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--dark);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(247, 147, 26, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(15, 23, 42, 0.7);
+            color: var(--light);
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.2);
+        }
+
+        /* Task list styles */
+        .task-list {
+            margin-top: 2rem;
+        }
+
+        .task-item {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .task-item:hover {
+            border-color: rgba(247, 147, 26, 0.3);
+        }
+
+        .task-checkbox {
+            margin-right: 1rem;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: var(--light);
+            margin-bottom: 0.25rem;
+        }
+
+        .task-meta {
+            font-size: 0.875rem;
+            color: var(--gray);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .task-reward {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .task-completed {
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+
+        .task-completed .task-title {
+            color: var(--gray);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .task-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .task-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Dashboard styles */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        .dashboard-sidebar {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .dashboard-main {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+            color: var(--darkest);
+        }
+
+        .user-info h3 {
+            color: var(--light);
+            margin-bottom: 0.25rem;
+        }
+
+        .user-info p {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem;
+            color: var(--gray);
+            text-decoration: none;
+            border-radius: 0.25rem;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(247, 147, 26, 0.1);
+            color: var(--primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: rgba(3, 7, 18, 0.5);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .parallax-wrapper {
+                perspective: 4px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" fill="#F7931A"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#F7931A" stroke-width="2"/>
+                    </svg>
+                    Bit<span>Tasker</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#" id="dashboard-link" style="display: none;">Dashboard</a>
+                </div>
+                <div id="auth-buttons">
+                    <button class="cta-button" id="login-btn">Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="parallax-wrapper">
+        <div class="parallax-group">
+            <!-- Parallax layers -->
+            <div class="parallax-layer starry-bg"></div>
+            <div class="parallax-layer stars"></div>
+            <div class="parallax-layer mountains-far"></div>
+            <div class="parallax-layer mountains-mid"></div>
+            <div class="parallax-layer mountains-near"></div>
+            <div class="parallax-layer ground"></div>
+            <div class="parallax-layer parallax-overlay"></div>
+            
+            <div class="floating-elements">
+                <div class="floating-coin coin1">₿</div>
+                <div class="floating-coin coin2">₿</div>
+                <div class="floating-coin coin3">₿</div>
+                <div class="floating-coin coin4">₿</div>
+                <div class="floating-coin coin5">₿</div>
+            </div>
+            
+            <div class="parallax-layer parallax-base">
+                <section class="hero">
+                    <div class="container">
+                        <h1>Complete Tasks. Earn Bitcoin. Be Productive.</h1>
+                        <p>BitTasker combines the power of Bitcoin and AI to create a trustless productivity ecosystem that verifies task completions, incentivizes with micro-rewards, and provides personalized coaching.</p>
+                        <button class="cta-button" id="hero-cta">Get Started</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <section class="features" id="features">
+        <div class="parallax-divider">
+            <div class="divider-mountains"></div>
+        </div>
+        <div class="container">
+            <div class="section-title" data-parallax="scroll" data-speed="0.5">
+                <h2>Why BitTasker?</h2>
+                <p>Our platform brings unprecedented trust and incentives to personal and team productivity.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Task Management</h3>
+                    <p>Create and organize tasks with a sleek, intuitive interface that makes productivity effortless.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⛓️</div>
+                    <h3>Blockchain Verification</h3>
+                    <p>Timestamp and cryptographically verify task completions using Bitcoin's blockchain for absolute trust.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Bitcoin Rewards</h3>
+                    <p>Earn satoshis via Lightning Network for completed tasks, creating tangible incentives for productivity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Productivity Coach</h3>
+                    <p>Receive personalized insights and suggestions from an AI that learns your habits and helps you optimize.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Team Collaboration</h3>
+                    <p>Share verified task logs with your team where every submission is provably completed and timestamped.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Zero Trust System</h3>
+                    <p>Eliminate the need for trust with cryptographic proof of task completion that anyone can verify.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How BitTasker Works</h2>
+                <p>Our platform combines cutting-edge technology with simplicity to enhance your productivity.</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Create Tasks</h3>
+                    <p>Set up tasks with deadlines, priorities, and rewards through our intuitive interface.</p>
+                </div>
+                <div class="step">
+                <div class="step-number">2</div>
+                <h3>Complete Work</h3>
+                <p>Work through your tasks with the help of our AI productivity coach that suggests optimal workflows.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Verify Completion</h3>
+                <p>When you mark a task complete, we timestamp it on the Bitcoin blockchain for permanent verification.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Get Rewarded</h3>
+                <p>Optionally receive Bitcoin rewards via Lightning Network for completing important tasks.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <h2>Ready to Boost Your Productivity?</h2>
+        <p>Join the waitlist to be among the first to experience Bitcoin-powered task management with verifiable completions and micro-incentives.</p>
+        <div class="cta-buttons">
+            <button class="cta-button" id="join-waitlist">Join Waitlist</button>
+            <button class="cta-secondary" id="see-demo">See Demo</button>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>BitTasker</h3>
+                <p>Bitcoin-powered productivity with verifiable task completions and AI coaching.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-bitcoin"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Product</h3>
+                <ul class="footer-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">API</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Blockchain Verification</a></li>
+                    <li><a href="#">Lightning Network</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 BitTasker. All rights reserved. Bitcoin is the future.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Modals -->
+<div class="modal" id="login-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Login</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-username" class="form-label">Username</label>
+                <input type="text" id="login-username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password" class="form-label">Password</label>
+                <input type="password" id="login-password" class="form-input" required>
+            </div>
+            <button type="submit" class="cta-button">Login</button>
+        </form>
+        <p style="margin-top: 1rem; text-align: center; color: var(--gray);">
+            Don't have an account? <a href="#" id="show-register" style="color: var(--primary);">Register</a>
+        </p>
+    </div>
+</div>
+
+<div class="modal" id="register-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Register</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <form id="register-form">
+            <div class="form-group">
+                <label for="register-username" class="form-label">Username</label>
+                <input type="text" id="register-username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="register-email" class="form-label">Email</label>
+                <input type="email" id="register-email" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password" class="form-label">Password</label>
+                <input type="password" id="register-password" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="register-lightning" class="form-label">Lightning Address (optional)</label>
+                <input type="text" id="register-lightning" class="form-input" placeholder="yourname@ln.bitcoin">
+            </div>
+            <button type="submit" class="cta-button">Register</button>
+        </form>
+        <p style="margin-top: 1rem; text-align: center; color: var(--gray);">
+            Already have an account? <a href="#" id="show-login" style="color: var(--primary);">Login</a>
+        </p>
+    </div>
+</div>
+
+<div class="modal" id="task-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Create New Task</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <form id="task-form">
+            <div class="form-group">
+                <label for="task-title" class="form-label">Title</label>
+                <input type="text" id="task-title" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="task-description" class="form-label">Description</label>
+                <textarea id="task-description" class="form-input" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="task-priority" class="form-label">Priority</label>
+                <select id="task-priority" class="form-input">
+                    <option value="1">Low</option>
+                    <option value="2" selected>Medium</option>
+                    <option value="3">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="task-due-date" class="form-label">Due Date</label>
+                <input type="date" id="task-due-date" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="task-estimated-time" class="form-label">Estimated Time (minutes)</label>
+                <input type="number" id="task-estimated-time" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="task-tags" class="form-label">Tags (comma separated)</label>
+                <input type="text" id="task-tags" class="form-input" placeholder="work, project, personal">
+            </div>
+            <div class="form-group">
+                <label for="task-reward" class="form-label">Reward (sats)</label>
+                <input type="number" id="task-reward" class="form-input" placeholder="0">
+            </div>
+            <button type="submit" class="cta-button">Save Task</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="dashboard-modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Your Dashboard</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="dashboard">
+            <div class="dashboard-sidebar">
+                <div class="user-profile">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div class="user-info">
+                        <h3 id="username-display">Username</h3>
+                        <p id="user-email">user@example.com</p>
+                    </div>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="#" class="active" data-tab="tasks">Tasks</a></li>
+                    <li><a href="#" data-tab="insights">AI Insights</a></li>
+                    <li><a href="#" data-tab="teams">Teams</a></li>
+                    <li><a href="#" data-tab="settings">Settings</a></li>
+                    <li><a href="#" id="logout-btn">Logout</a></li>
+                </ul>
+            </div>
+            <div class="dashboard-main">
+                <div id="tasks-tab" class="tab-content active">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Your Tasks</h3>
+                        <button class="cta-button" id="create-task-btn">+ New Task</button>
+                    </div>
+                    <div class="task-list" id="task-list">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+                <div id="insights-tab" class="tab-content" style="display: none;">
+                    <h3>AI Productivity Insights</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="completed-tasks">0</div>
+                            <div class="stat-label">Tasks Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="reward-earned">0</div>
+                            <div class="stat-label">Sats Earned</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="productivity-score">0%</div>
+                            <div class="stat-label">Productivity Score</div>
+                        </div>
+                    </div>
+                    <div id="ai-insights-container">
+                        <!-- AI insights will be loaded here -->
+                    </div>
+                    <button class="cta-button" id="refresh-insights" style="margin-top: 1rem;">Refresh Insights</button>
+                </div>
+                <div id="teams-tab" class="tab-content" style="display: none;">
+                    <h3>Your Teams</h3>
+                    <div id="teams-container">
+                        <!-- Teams will be loaded here -->
+                    </div>
+                    <button class="cta-button" id="create-team-btn" style="margin-top: 1rem;">Create Team</button>
+                </div>
+                <div id="settings-tab" class="tab-content" style="display: none;">
+                    <h3>Account Settings</h3>
+                    <form id="settings-form">
+                        <div class="form-group">
+                            <label for="settings-lightning" class="form-label">Lightning Address</label>
+                            <input type="text" id="settings-lightning" class="form-input" placeholder="yourname@ln.bitcoin">
+                        </div>
+                        <button type="submit" class="cta-button">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // API Base URL - points to your Flask backend
+    const API_BASE_URL = window.location.origin;
+
+    // Simple state management
+    let currentUser = null;
+    let authToken = localStorage.getItem('authToken');
+
+    // Initialize when DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        checkAuthStatus();
+    });
+
+    // Check if user is authenticated
+    async function checkAuthStatus() {
+        if (!authToken) {
+            updateUIForAuth(false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/health`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+
+            if (response.ok) {
+                // Token is valid
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                currentUser = userData;
+                updateUIForAuth(true);
+            } else {
+                logout();
+            }
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            logout();
+        }
+    }
+
+    // Update UI based on auth status
+    function updateUIForAuth(isAuthenticated) {
+        const authButtons = document.getElementById('auth-buttons');
+        const dashboardLink = document.getElementById('dashboard-link');
+        const heroCtaBtn = document.getElementById('hero-cta');
+
+        if (isAuthenticated) {
+            authButtons.innerHTML = '<button class="cta-button" id="dashboard-btn">Dashboard</button>';
+            document.getElementById('dashboard-btn').addEventListener('click', showDashboard);
+            if (dashboardLink) dashboardLink.style.display = 'block';
+            if (heroCtaBtn) heroCtaBtn.textContent = 'Go to Dashboard';
+        } else {
+            authButtons.innerHTML = '<button class="cta-button" id="login-btn">Login</button>';
+            if (dashboardLink) dashboardLink.style.display = 'none';
+            if (heroCtaBtn) heroCtaBtn.textContent = 'Get Started';
+            // Re-attach login event listener
+            document.getElementById('login-btn').addEventListener('click', () => {
+                document.getElementById('login-modal').style.display = 'flex';
+            });
+        }
+    }
+
+    // Setup all event listeners
+    function setupEventListeners() {
+        // Modal toggles
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.closest('.modal').style.display = 'none';
+            });
+        });
+
+        // Login/register toggles
+        document.getElementById('show-register')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('register-modal').style.display = 'flex';
+        });
+
+        document.getElementById('show-login')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('register-modal').style.display = 'none';
+            document.getElementById('login-modal').style.display = 'flex';
+        });
+
+        // Form submissions
+        document.getElementById('login-form')?.addEventListener('submit', handleLogin);
+        document.getElementById('register-form')?.addEventListener('submit', handleRegister);
+        document.getElementById('task-form')?.addEventListener('submit', handleTaskCreate);
+
+        // Buttons
+        document.getElementById('logout-btn')?.addEventListener('click', logout);
+        document.getElementById('create-task-btn')?.addEventListener('click', () => {
+            document.getElementById('task-modal').style.display = 'flex';
+        });
+        document.getElementById('refresh-insights-btn')?.addEventListener('click', refreshInsights);
+
+        // Hero CTA
+        document.getElementById('hero-cta')?.addEventListener('click', () => {
+            if (currentUser) {
+                showDashboard();
+            } else {
+                document.getElementById('login-modal').style.display = 'flex';
+            }
+        });
+    }
+
+    // Handle login
+    async function handleLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                authToken = data.token;
+                currentUser = data.user;
+                
+                // Store auth data
+                localStorage.setItem('authToken', authToken);
+                localStorage.setItem('userData', JSON.stringify(currentUser));
+                
+                // Update UI
+                updateUIForAuth(true);
+                document.getElementById('login-modal').style.display = 'none';
+                showDashboard();
+            } else {
+                alert(data.error || 'Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Login failed. Please try again.');
+        }
+    }
+
+    // Handle registration
+    async function handleRegister(e) {
+        e.preventDefault();
+        const username = document.getElementById('register-username').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const lightningAddress = document.getElementById('register-lightning').value;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password,
+                    lightning_address: lightningAddress
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Registration successful! Please login.');
+                document.getElementById('register-modal').style.display = 'none';
+                document.getElementById('login-modal').style.display = 'flex';
+                // Clear form
+                document.getElementById('register-form').reset();
+            } else {
+                alert(data.error || 'Registration failed');
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            alert('Registration failed. Please try again.');
+        }
+    }
+
+    // Handle task creation
+    async function handleTaskCreate(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const taskData = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/tasks`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(taskData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById('task-modal').style.display = 'none';
+                e.target.reset();
+                loadTasks();
+            } else {
+                alert(data.error || 'Failed to create task');
+            }
+        } catch (error) {
+            console.error('Task creation error:', error);
+            alert('Failed to create task');
+        }
+    }
+
+    // Show dashboard
+    async function showDashboard() {
+        if (!currentUser) return;
+
+        // Update user info
+        document.getElementById('username-display').textContent = currentUser.username;
+        document.getElementById('user-email').textContent = currentUser.email || 'No email provided';
+        document.getElementById('user-avatar').textContent = currentUser.username.charAt(0).toUpperCase();
+
+        // Load data
+        await loadTasks();
+        await refreshInsights();
+
+        // Show modal
+        document.getElementById('dashboard-modal').style.display = 'flex';
+    }
+
+    // Load tasks
+    async function loadTasks() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/tasks`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+
+            if (response.ok) {
+                const tasks = await response.json();
+                renderTasks(tasks);
+            } else {
+                console.error('Failed to load tasks');
+            }
+        } catch (error) {
+            console.error('Error loading tasks:', error);
+        }
+    }
+
+    // Render tasks
+    function renderTasks(tasks) {
+        const container = document.getElementById('task-list');
+        container.innerHTML = '';
+
+        if (!tasks || tasks.length === 0) {
+            container.innerHTML = '<p>No tasks yet. Create your first task!</p>';
+            return;
+        }
+
+        tasks.forEach(task => {
+            const taskEl = document.createElement('div');
+            taskEl.className = 'task-item';
+            taskEl.innerHTML = `
+                <div class="task-content">
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-meta">
+                        <span>Priority: ${task.priority}</span>
+                        <span>Due: ${task.due_date || 'None'}</span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(taskEl);
+        });
+    }
+
+    // Refresh insights
+    async function refreshInsights() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/coach/insights`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+
+            if (response.ok) {
+                const insights = await response.json();
+                renderInsights(insights);
+            } else {
+                console.error('Failed to load insights');
+            }
+        } catch (error) {
+            console.error('Error loading insights:', error);
+        }
+    }
+
+    // Render insights
+    function renderInsights(insights) {
+        const container = document.getElementById('ai-insights-container');
+        container.innerHTML = '';
+
+        if (!insights || insights.length === 0) {
+            container.innerHTML = '<p>No insights yet. Complete some tasks first!</p>';
+            return;
+        }
+
+        insights.forEach(insight => {
+            const insightEl = document.createElement('div');
+            insightEl.className = 'feature-card';
+            insightEl.innerHTML = `
+                <h3>${insight.insight_type}</h3>
+                <p>${insight.content}</p>
+            `;
+            container.appendChild(insightEl);
+        });
+    }
+
+    // Logout
+    function logout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        authToken = null;
+        currentUser = null;
+        updateUIForAuth(false);
+        document.getElementById('dashboard-modal').style.display = 'none';
+    }
+
+    // Initialize scroll animations
+    const fadeElements = document.querySelectorAll('.fade-in-section');
+    const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    fadeElements.forEach(el => {
+        fadeObserver.observe(el);
+    });
+</script>
+</body>
+</html> 

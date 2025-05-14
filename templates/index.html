@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitTasker - Bitcoin-Powered AI Productivity Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #f7931a;
+            --primary-dark: #e67e09;
+            --secondary: #4a6cf7;
+            --dark: #0f172a;
+            --darker: #060d1b;
+            --darkest: #030712;
+            --light: #e2e8f0;
+            --lighter: #f1f5f9;
+            --gray: #94a3b8;
+            --accent: #10b981;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: var(--darkest);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        header {
+            background-color: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--light);
+        }
+        
+        .logo span {
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .cta-button {
+            background-color: var(--primary);
+            color: var(--darkest);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 147, 26, 0.4);
+        }
+        
+        /* Enhanced Parallax Effects */
+        .parallax-wrapper {
+            height: 100vh;
+            overflow-x: hidden;
+            perspective: 8px;
+            perspective-origin: 0%;
+            position: relative;
+        }
+        
+        .parallax-group {
+            position: relative;
+            height: 100vh;
+            transform-style: preserve-3d;
+            z-index: 1;
+        }
+        
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        
+        .parallax-back {
+            transform: translateZ(-10px) scale(2.25);
+            background-image: url('/api/placeholder/1920/1080');
+            background-size: cover;
+            background-position: center;
+            height: 120vh;
+            filter: brightness(0.3) hue-rotate(15deg);
+        }
+        
+        .parallax-mid {
+            transform: translateZ(-5px) scale(1.625);
+            background: radial-gradient(circle at center, transparent 0%, rgba(3, 7, 18, 0.4) 100%);
+        }
+        
+        .parallax-base {
+            transform: translateZ(0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            pointer-events: auto;
+        }
+        
+        .parallax-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(15, 23, 42, 0.5) 0%, rgba(3, 7, 18, 0.9) 100%);
+        }
+        
+        /* Floating Bitcoin elements for decoration */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .floating-coin {
+            position: absolute;
+            opacity: 0.15;
+            transform: translateZ(-3px);
+        }
+        
+        .coin1 {
+            top: 15%;
+            left: 10%;
+            font-size: 3rem;
+            animation: float 8s ease-in-out infinite, spin 20s linear infinite;
+        }
+        
+        .coin2 {
+            top: 60%;
+            right: 5%;
+            font-size: 4rem;
+            animation: float 12s ease-in-out infinite, spin 30s linear infinite;
+        }
+        
+        .coin3 {
+            bottom: 20%;
+            left: 20%;
+            font-size: 2.5rem;
+            animation: float 10s ease-in-out infinite, spin 25s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        .hero {
+            padding: 7rem 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(247, 147, 26, 0.1) 0%, rgba(3, 7, 18, 0) 70%);
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-top: 4rem;
+        }
+        
+        .hero-image {
+            position: relative;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .features {
+            padding: 8rem 0;
+            background-color: var(--dark);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, var(--dark));
+            z-index: 1;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.75rem;
+            margin-bottom: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .feature-card {
+            background-color: rgba(15, 23, 42, 0.7);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(247, 147, 26, 0.2);
+            border-color: rgba(247, 147, 26, 0.3);
+        }
+        
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            background-color: rgba(247, 147, 26, 0.15);
+            color: var(--primary);
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(247, 147, 26, 0.3), transparent 30%);
+            animation: rotate 4s linear infinite;
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+        
+        /* How it Works Section */
+        .how-it-works {
+            padding: 8rem 0;
+            background-color: var(--darker);
+            position: relative;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+        
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            background-color: var(--primary);
+            color: var(--darkest);
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .step h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+        
+        .step p {
+            color: var(--gray);
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 8rem 0;
+            background-color: var(--darkest);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(247, 147, 26, 0.1) 0%, rgba(3, 7, 18, 0) 70%);
+            z-index: 1;
+        }
+        
+        .cta h2 {
+            font-size: 2.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        
+        .cta-secondary {
+            background-color: transparent;
+            color: var(--light);
+            border: 2px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cta-secondary:hover {
+            background-color: rgba(247, 147, 26, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 5rem 0 2rem;
+            background-color: var(--darker);
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -0.5rem;
+            width: 2rem;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .footer-column p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        /* Responsive Styles */
+        /* Parallax Divider */
+        .parallax-divider {
+            position: relative;
+            height: 150px;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+        
+        .parallax-divider::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('/api/placeholder/1920/400');
+            background-size: cover;
+            background-position: center;
+            transform: translateZ(-1px) scale(1.5);
+            filter: brightness(0.2) hue-rotate(15deg);
+        }
+        
+        /* Scroll animations */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Additional Parallax Settings */
+        [data-parallax="scroll"] {
+            transition: transform 0.3s ease-out;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .parallax-wrapper {
+                perspective: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" fill="#F7931A"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#F7931A" stroke-width="2"/>
+                    </svg>
+                    Bit<span>Tasker</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#pricing">Pricing</a>
+                </div>
+                <button class="cta-button">Join Waitlist</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="parallax-wrapper">
+        <div class="parallax-group">
+            <div class="parallax-layer parallax-back"></div>
+            <div class="parallax-layer parallax-mid"></div>
+            <div class="parallax-layer parallax-overlay"></div>
+            <div class="floating-elements">
+                <div class="floating-coin coin1">₿</div>
+                <div class="floating-coin coin2">₿</div>
+                <div class="floating-coin coin3">₿</div>
+            </div>
+            <div class="parallax-layer parallax-base">
+                <section class="hero">
+                    <div class="container">
+                        <h1>Complete Tasks. Earn Bitcoin. Be Productive.</h1>
+                        <p>BitTasker combines the power of Bitcoin and AI to create a trustless productivity ecosystem that verifies task completions, incentivizes with micro-rewards, and provides personalized coaching.</p>
+                        <button class="cta-button">Get Started</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <section class="features" id="features">
+        <div class="parallax-divider"></div>
+        <div class="container">
+            <div class="section-title" data-parallax="scroll" data-speed="0.5">
+                <h2>Why BitTasker?</h2>
+                <p>Our platform brings unprecedented trust and incentives to personal and team productivity.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Task Management</h3>
+                    <p>Create and organize tasks with a sleek, intuitive interface that makes productivity effortless.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⛓️</div>
+                    <h3>Blockchain Verification</h3>
+                    <p>Timestamp and cryptographically verify task completions using Bitcoin's blockchain for absolute trust.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Bitcoin Rewards</h3>
+                    <p>Earn satoshis via Lightning Network for completed tasks, creating tangible incentives for productivity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Productivity Coach</h3>
+                    <p>Receive personalized insights and suggestions from an AI that learns your habits and helps you optimize.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Team Collaboration</h3>
+                    <p>Share verified task logs with your team where every submission is provably completed and timestamped.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Zero Trust System</h3>
+                    <p>Eliminate the need for trust with cryptographic proof of task completion that anyone can verify.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How BitTasker Works</h2>
+                <p>Our platform combines cutting-edge technology with simplicity to enhance your productivity.</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Create Tasks</h3>
+                    <p>Set up tasks with deadlines, priorities, and rewards through our intuitive interface.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Complete Work</h3>
+                    <p>Tackle your tasks and mark them as complete when you're done.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Verify on Blockchain</h3>
+                    <p>BitTasker timestamps your completion on the Bitcoin blockchain for immutable proof.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Earn Rewards</h3>
+                    <p>Receive satoshis through Lightning Network as incentives for your productivity.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Revolutionize Your Productivity?</h2>
+            <p>Join BitTasker today and experience the future of productivity with Bitcoin-powered incentives and AI coaching.</p>
+            <div class="cta-buttons">
+                <button class="cta-button">Join Waitlist</button>
+                <button class="cta-secondary">Learn More</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>BitTasker</h3>
+                    <p>The Bitcoin-Powered AI Productivity Platform that verifies tasks, rewards completion, and coaches you to success.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BitTasker. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
